@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blinds Controls</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="controls blinds">
+        <form method="post">
+            <button type="button" onclick="sendData('open')">Open</button>
+            <button type="button" onclick="sendData('close')">Close</button>
+            <br>
+            <button type="button" onmousedown="startAction('up')" onmouseup="stopAction()" onmouseleave="stopAction()">Up</button>
+            <button type="button" onmousedown="startAction('down')" onmouseup="stopAction()" onmouseleave="stopAction()">Down</button>
+        </form>
+        <br>
+        <a href="/" class="back-button">Back to Main Menu</a>
+    </div>
+    <script>
+        function sendData(action) {
+            $.post('/blinds', { action: action });
+        }
+
+        let intervalId = null;
+        function startAction(action) {
+            if (intervalId !== null) clearInterval(intervalId);
+            intervalId = setInterval(function() {
+                sendData(action);
+            }, 50); // Continuously send command every 500ms
+        }
+
+        function stopAction() {
+            if (intervalId !== null) clearInterval(intervalId);
+            intervalId = null;
+        }
+    </script>
+</body>
+</html>

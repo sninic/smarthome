@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lighting Controls</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setInterval(fetchAdcValue, 100); // Poll every 1000 milliseconds (1 second)
+
+            function fetchAdcValue() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/adc_value', true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        document.getElementById('adcValue').innerHTML = 'Photoresistor Brightness Value: ' + data.value;
+                    } else {
+                        document.getElementById('adcValue').innerHTML = 'Error fetching Brightness Value';
+                    }
+                };
+                xhr.onerror = function() {
+                    document.getElementById('adcValue').innerHTML = 'Error fetching Brightness Value';
+                };
+                xhr.send();
+            }
+
+            var colorPicker = document.getElementById('color');
+            var onButton = document.getElementById('onButton');
+            var offButton = document.getElementById('offButton');
+            var brightnessSlider = document.getElementById('brightnessSlider');
+            var checkbox = document.getElementById('autoToggle');
+            var lastColor = "#FF0000"; // Default to red
+
+
+            onButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                sendColor(lastColor, "on");
+            });
+
+            colorPicker.addEventListener('change', function() {
+                lastColor = this.value
+                sendColor(lastColor, "on");
+            });
+
+            offButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                sendColor(lastColor, "off"); // Sending off as black (off)
+            });
+
+            brightnessSlider.addEventListener('input', function() {
+                sendColor(this.value, "slider");
+            });
+
+            checkbox.addEventListener('change', function() {
+                sendColor(this.checked ? "yes" : "no", "toggle");
+            });
+
+            function sendColor(color, action) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/lighting", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("Action: " + action + ", Value: " + color);
+                    }
+                };
+                xhr.send("color=" + color + "&action=" + action);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="controls lighting">
+        <div id="adcValue">Photoresistor Brightness Value: Waiting for data...</div>
+        <form method="post">
+            <div>
+                <label for="color">Color:</label>
+                <input type="color" id="color" name="color">
+            </div>
+            <br>
+            <label for="brightnessSlider">Brightness:</label>
+            <input type="range" id="brightnessSlider" name="brightness" min="0" max="100" value="50">
+            <br>
+            <label><input type="checkbox" id="autoToggle" name="autoToggle"> Auto Adjust Brightness</label>
+            <br>
+            <button id="onButton" name="action" value="on">On</button>
+            <button id="offButton" name="action" value="off">Off</button>
+            <br>
+            <a href="/" class="back-button">Back to Main Menu</a>
+        </form>
+    </div>
+</body>
+</html>

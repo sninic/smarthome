@@ -1,0 +1,80 @@
+/* General Styles */
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+h2 {
+    color: navy;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+a, button {
+    display: block; /* Make links behave like block elements */
+    width: 80%; /* Use a percentage to make the buttons responsive */
+    max-width: 300px; /* Maximum width for large screens */
+    margin: 10px auto; /* Centering and spacing out buttons */
+    padding: 15px 20px; /* Larger touch targets */
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px; /* Larger text for better readability */
+}
+
+input[type="color"] {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 600px) {
+    h2 {
+        font-size: 20px;
+    }
+
+    a, button {
+        font-size: 16px;
+        padding: 12px 18px;
+    }
+}
+
+.controls {
+    text-align: center;
+    width: 100%;
+}
+
+.controls button, .controls input[type='submit'], .back-button {
+    display: inline-block; /* Side by side for lighting, overridden for blinds */
+    width: auto; /* Auto width based on content */
+    margin: 10px 5px; /* Spacing around buttons */
+    padding: 15px 25px; /* Bigger touch targets */
+    font-size: 18px; /* Larger font size */
+}
+
+.controls div {
+    margin-top: 20px; /* Spacing for color picker and below on/off buttons */
+}
+
+.blinds button, .back-button {
+    display: block; /* Stack vertically for blinds */
+    margin: 20px auto; /* Center and add more space */
+}
+
+.back-button {
+    display: inline-block; /* Ensure it's in line for lighting but stack for blinds */
+    width: auto;
+    margin-top: 30px; /* Extra spacing from the controls to the back button */
+}
